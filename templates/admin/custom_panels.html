@@ -1,0 +1,53 @@
+{% load bootstrap4 %}
+<style>
+    .card {
+        max-width:100px; 
+        float: left; 
+        margin-right: 25px;
+        text-align: center;
+    }
+    .card .card-text {
+        font-size: 3rem;
+    }
+    
+    .card.success , .card.success .card-title {
+        color: darkgreen;
+    }
+
+    .card.warning , .card.warning .card-title {
+        color: red;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-group">
+                <div class="card success">
+                    <div class="card-body">
+                        <h3 class="card-title ">Total Clients</h3>
+                        <p class="card-text">{{ num_clients }}</p>
+                    </div>
+                </div>
+
+                <div class="card success">
+                    <div class="card-body">
+                        <h3 class="card-title ">Open Jobs</h3>
+                        <p class="card-text">{{ open_jobs }}</p>
+                    </div>
+                </div>
+                <div class="card warning">
+                    <div class="card-body">
+                        <h3 class="card-title">Overdue Jobs</h3>
+                        <p class="card-text">{{ overdue_jobs }}</p>
+                    </div>
+                </div>
+                <div class="card warning">
+                    <div class="card-body">
+                        <h3 class="card-title">Overdue Tasks</h3>
+                        <p class="card-text">{{ overdue_tasks }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
