@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from solo.models import SingletonModel
 
 
@@ -9,17 +10,34 @@ class Client(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     ]
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    gender = models.CharField(max_length=1, choices=GENDERS)
+    CLIENT_TYPE = [
+        ('I', 'Individual'),
+        ('C', 'Company')
+    ]
+    client_type = models.CharField(max_length=1, default="I", choices=CLIENT_TYPE)
+    company_name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=80, blank=True)
     email = models.EmailField(max_length=125)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Incorrect Format.Please use: '+999999999' Max 15 Chars.")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     address = models.TextField(max_length=200, blank=True)
     fiscal_number = models.CharField(max_length=20, blank=True)
 
+    def clean(self):
+        super().clean()
+
+        if self.client_type == "I" and not self.name:
+            raise ValidationError({'name': 'Client\'s name is mandatory.'})
+        
+        elif self.client_type == "C" and not self.company_name:
+            raise ValidationError({'company_name': 'Company\'s name is mandatory.'})
+            
+
     def __str__(self):
-        return f"{self.last_name}, {self.first_name}"
+        if self.client_type == "I":
+            return f"{self.name}"
+        else:
+            return f"{self.company_name}"
 
 class Job(models.Model):
     STATUS = [

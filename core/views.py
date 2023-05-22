@@ -18,8 +18,6 @@ def render_to_pdf(template_src, context_dict={}):
 
 class DownloadPDF(View):
 	def get(self, request, id):
-		print(f"id={id}")
-
 
 		job = get_object_or_404(Job, pk=id)
 		client = job.client

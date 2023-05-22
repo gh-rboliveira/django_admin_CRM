@@ -9,9 +9,22 @@ from datetime import date
 
 # Register your models here.
 class ClientAdmin(admin.ModelAdmin):
-	list_display = ("name", "email", "phone_number")
-	def name(self,obj):
-		return obj.last_name + ", " + obj.first_name
+	
+	class Media:
+		js = (
+			'xCRM/js/client.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js',
+		)
+	def change_button(self, obj):
+		return format_html('<a class="btn" href="/admin/core/client/{}/change/">Change</a>', obj.id)
+
+	def delete_button(self, obj):
+		return format_html('<a class="btn" href="/admin/core/client/{}/delete/">Delete</a>', obj.id)
+
+	list_display = ("__str__", "email", "phone_number", "change_button", "delete_button")
+	
+
+		
 
 class TaskInline(admin.TabularInline):
 	model = Task
@@ -27,7 +40,7 @@ class JobAdmin(admin.ModelAdmin):
 
 	def link_client(self, obj):
 		link = reverse('admin:core_client_change', args=[obj.client.id])
-		return format_html('<a href="{}">{}</a>', link, obj.client.first_name)
+		return format_html('<a href="{}">{}</a>', link, obj.client)
 
 	link_client.short_description = 'Client'
 
